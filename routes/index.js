@@ -13,7 +13,7 @@ router.get('/sign-up', function(req, res, next) {
 });
 
 // Handle user sign up on POST
-router.get('/sign-up', (req, res, next) => {
+router.post('/sign-up', (req, res, next) => {
   const user = new User({
     first_name: req.body.first_name,
     last_name: req.body.last_name,
