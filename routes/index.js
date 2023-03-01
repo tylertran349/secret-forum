@@ -4,7 +4,7 @@ const User = require("../models/user");
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+  res.render('index', { title: 'Secret Chat Room' });
 });
 
 // Display user sign up form on GET
