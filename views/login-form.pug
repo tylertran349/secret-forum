@@ -1,0 +1,18 @@
+html(lang="en")
+head
+    meta(charset="UTF-8")
+    title 
+body 
+    span= title
+    if(user)
+        span Welcome back #{user.username}!
+        a(href="/log-out") Log Out
+    else
+        span Please log in.
+        form(action="/login", method="POST")
+            label(for="username") Username
+            input(name="username" placeholder="Enter username" type="text")
+            label(for="password") Password
+            input(name="password" placeholder="Enter password" type="password")
+            button Sign In
+        a(href="/sign-up") Sign Up
