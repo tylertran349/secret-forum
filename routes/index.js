@@ -5,6 +5,7 @@ const session = require("express-session");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const bcrypt = require("bcryptjs");
+const { body, validationResult } = require("express-validator");
 
 passport.use(new LocalStrategy((username, password, done) => {
   User.findOne({ username: username }).then((user, err) => {
@@ -73,14 +74,13 @@ router.post('/sign-up', (req, res, next) => {
       last_name: req.body.last_name,
       username: req.body.username,
       password: hashedPassword,
-      membership_status: true,
+      membership_status: false,
       messages: [],
     });
-    user.save().then(err => {
-      if(err) {
-        return next(err);
-      }
+    user.save().then(function() { // If save() was successful, redirect to localhost:3000
       res.redirect("/");
+    }, function(err) { // If save() was unsuccessful, return an error
+      return next(err);
     })
   })
 });
