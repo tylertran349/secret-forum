@@ -67,7 +67,22 @@ router.get("/log-out", (req, res, next) => {
 })
 
 // Handle user sign up on POST
-router.post('/sign-up', (req, res, next) => {
+router.post('/sign-up', [
+  body('first_name').trim().isLength({min: 1}).escape().withMessage("First name must be specified.")
+  .isAlphanumeric().withMessage("First name has non-alphanumeric characters."),
+  body('last_name').trim().isLength({min: 1}).escape().withMessage("Last name must be specified.")
+  .isAlphanumeric().withMessage("Last name has non-alphanumeric characters."),
+  body('username').trim().isLength({min: 1}).escape().withMessage("Username must be specified.")
+  .isAlphanumeric().withMessage("Username has non-alphanumeric characters."),
+  body('password').trim().isLength({min: 8}).escape().withMessage("Password must have 8 or more characters."),
+], (req, res, next) => {
+  // Extract any validation errors from a request
+  const errors = validationResult(req);
+  // If there are errors, re-render the sign up form again
+  if(!errors.isEmpty()) {
+    return res.render('sign-up-form', {title: 'Sign Up', errors: errors.array()})
+  }
+
   bcrypt.hash(req.body.password, 10, (err, hashedPassword) => {
     const user = new User({
       first_name: req.body.first_name,
@@ -82,8 +97,9 @@ router.post('/sign-up', (req, res, next) => {
     }, function(err) { // If save() was unsuccessful, return an error
       return next(err);
     })
-  })
-});
+  });
+})
+
 
 router.post('/login', passport.authenticate("local", {
   successRedirect: "/",
