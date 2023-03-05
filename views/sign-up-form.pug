@@ -14,3 +14,6 @@ body
         label(for="password") Password
         input(name="password" placeholder="Enter password" type="password")
         button Sign Up
+    if errors
+        for error in errors
+            span #{error.msg}
