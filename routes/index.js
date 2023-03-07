@@ -75,6 +75,7 @@ router.post('/sign-up', [
   body('username').trim().isLength({min: 1}).escape().withMessage("Username must be specified.")
   .isAlphanumeric().withMessage("Username has non-alphanumeric characters."),
   body('password').trim().isLength({min: 8}).escape().withMessage("Password must have 8 or more characters."),
+  body('confirm-password').trim().escape().custom((value, {req}) => value === req.body.password).withMessage("The passwords do not match."),
 ], (req, res, next) => {
   // Extract any validation errors from a request
   const errors = validationResult(req);
