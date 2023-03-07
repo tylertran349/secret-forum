@@ -81,24 +81,31 @@ router.post('/sign-up', [
   const errors = validationResult(req);
   // If there are errors, re-render the sign up form again
   if(!errors.isEmpty()) {
-    return res.render('sign-up-form', {title: 'Sign Up', errors: errors.array()})
-  }
-
-  bcrypt.hash(req.body.password, 10, (err, hashedPassword) => {
-    const user = new User({
-      first_name: req.body.first_name,
-      last_name: req.body.last_name,
-      username: req.body.username,
-      password: hashedPassword,
-      membership_status: false,
-      messages: [],
-    });
-    user.save().then(function() { // If save() was successful, redirect to localhost:3000
-      res.redirect("/");
-    }, function(err) { // If save() was unsuccessful, return an error
-      return next(err);
+    return res.render('sign-up-form', {title: 'Sign Up', errors: errors.array()});
+  } else {
+    User.findOne({ username: req.body.username }).then(found_username => {
+      if(found_username) {
+        const error = [{msg: "Username already exists."}]; // Create an array with a single object that contains a msg property with the custom error message
+        return res.render("sign-up-form", {title: 'Sign Up', errors: error }); // Pass the array to the sign-up-form view using the errors property
+      } else {
+        bcrypt.hash(req.body.password, 10, (err, hashedPassword) => {
+          const user = new User({
+            first_name: req.body.first_name,
+            last_name: req.body.last_name,
+            username: req.body.username,
+            password: hashedPassword,
+            membership_status: false,
+            messages: [],
+          });
+          user.save().then(function() { // If save() was successful, redirect to localhost:3000
+            res.redirect("/");
+          }, function(err) { // If save() was unsuccessful, return an error
+            return next(err);
+          })
+        });
+      }
     })
-  });
+  }
 })
 
 
