@@ -1,0 +1,18 @@
+html(lang="en")
+head
+    meta(charset="UTF-8")
+    title 
+body 
+    span= title
+    if(user.membership_status == true)
+        span You already joined the club.
+        a(href="/") Back to Home Page
+    else
+        form(action="/join-club", method="POST")
+            label(for="passcode") Enter the secret passcode below.
+            input(name="passcode" placeholder="Enter passcode" type="number")
+            button Join
+        a(href="/") Back to Home Page
+    if errors
+        for error in errors
+            span #{error.msg}
