@@ -6,6 +6,8 @@ body
     span= title
     if(user)
         span Welcome back #{user.username}!
+        if(user.membership_status == false) 
+            a(href="join-club") Click to join the club!
         a(href="/log-out") Log Out
     else
         span Please log in.
