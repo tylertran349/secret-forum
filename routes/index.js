@@ -6,6 +6,7 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const bcrypt = require("bcryptjs");
 const { body, validationResult } = require("express-validator");
+require('dotenv').config();
 
 passport.use(new LocalStrategy((username, password, done) => {
   User.findOne({ username: username }).then((user, err) => {
@@ -101,17 +102,37 @@ router.post('/sign-up', [
             res.redirect("/");
           }, function(err) { // If save() was unsuccessful, return an error
             return next(err);
-          })
+          });
         });
       }
     })
   }
 })
 
-
 router.post('/login', passport.authenticate("local", {
   successRedirect: "/",
   failureRedirect: "/",
 }));
+
+router.get('/join-club', function(req, res, next) {
+  res.render('join-the-club-form', { title: 'Join the Club', user: req.user });
+});
+
+// TODO: When the correct passcode (13579) gets entered, the membership_status doesn't get changed to true as it should
+router.post('/join-club', [
+  body('passcode').trim().escape().custom((value, {req}) => value === "13579").withMessage("The passcode you entered is incorrect.")
+], (req, res, next) => {
+  const errors = validationResult(req);
+
+  if(!errors.isEmpty()) {
+    return res.render('join-the-club-form', { title: "Join the Club", user: req.user, errors: errors.array() })
+  } else {
+    User.findOneAndUpdate({ username: req.user.username }, { membership_status: true}, { upsert: false, useFindAndModify: false }).then(function() {
+      res.redirect("/");
+    }, function(err) {
+      return next(err);
+    });
+  }
+});
 
 module.exports = router;
