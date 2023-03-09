@@ -45,6 +45,7 @@ router.use(passport.session());
 router.use(express.urlencoded({ extended: false }));
 router.use(function(req, res, next) {
   res.locals.currentUser = req.user;
+  res.locals.messages = req.messages;
   next();
 });
 
@@ -120,7 +121,7 @@ router.get('/join-club', function(req, res, next) {
 
 // TODO: When the correct passcode (13579) gets entered, the membership_status doesn't get changed to true as it should
 router.post('/join-club', [
-  body('passcode').trim().escape().custom((value, {req}) => value === "13579").withMessage("The passcode you entered is incorrect.")
+  body('passcode').trim().escape().custom((value, {req}) => value === process.env.SECRET_PASSCODE).withMessage("The passcode you entered is incorrect.")
 ], (req, res, next) => {
   const errors = validationResult(req);
 
