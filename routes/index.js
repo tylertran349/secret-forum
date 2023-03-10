@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const User = require("../models/user");
+const Message = require("../models/message");
 const session = require("express-session");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
@@ -45,14 +46,18 @@ router.use(passport.session());
 router.use(express.urlencoded({ extended: false }));
 router.use(function(req, res, next) {
   res.locals.currentUser = req.user;
-  res.locals.messages = req.messages;
   next();
 });
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('login-form', { title: 'Secret Chat Room', user: req.user });
-});
+  Message.find({}, "user title message time")
+  .populate({path: 'user', select: 'username'}) // Populate the user (path attribute is user) field of the message with its corresponding user and only include the username (select attribute is username)
+  .then(function(list_messages) {
+    res.render('login-form', { title: 'Secret Chat Room', user: req.user, messages: list_messages});
+  })
+  .catch(next); // Catch any errors that might occur during the find and populate operations and pass them on to the "next" middleware function
+})
 
 // Display user sign up form on GET
 router.get('/sign-up', function(req, res, next) {
@@ -135,5 +140,33 @@ router.post('/join-club', [
     });
   }
 });
+
+router.get('/new-message', function(req, res, next) {
+  res.render("create-message-form", { title: 'Create a New Message' });
+});
+
+router.post('/new-message', [
+  body('title').trim().isLength({min: 1}).escape().withMessage("Title cannot be empty."),
+  body('message').trim().isLength({min: 1}).escape().withMessage("Message cannot be empty.")
+], (req, res, next) => {
+  // Extract any validation errors from a request
+  const errors = validationResult(req);
+  // If there are errors, re-render the sign up form again
+  if(!errors.isEmpty()) {
+    return res.render('create-message-form', {title: 'Create a New Message', errors: errors.array()});
+  } else {
+    const message = new Message({
+      user: req.user, // Associate current logged in user with message
+      title: req.body.title,
+      message: req.body.message,
+      time: new Date(), 
+    });
+    message.save().then(function() {
+      res.redirect("/");
+    }, function(err) {
+      return next(err);
+    });
+  }
+})
 
 module.exports = router;
