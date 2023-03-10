@@ -8,6 +8,7 @@ body
         span Welcome back #{user.username}!
         if(user.membership_status == false) 
             a(href="join-club") Click to join the club!
+        a(href="/new-message") Create Message
         a(href="/log-out") Log Out
     else
         span Please log in.
@@ -18,3 +19,8 @@ body
             input(name="password" placeholder="Enter password" type="password")
             button Sign In
         a(href="/sign-up") Sign Up
+    each message in messages
+        span #{message.title}
+        span #{message.message}
+    else 
+        span There are no messages.
