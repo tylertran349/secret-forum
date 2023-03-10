@@ -9,6 +9,12 @@ body
         if(user.membership_status == false) 
             a(href="join-club") Click to join the club!
         a(href="/new-message") Create Message
+        each message in messages
+            span #{message.title}
+            span #{message.message}
+            span Posted by #{message.user.username} at #{message.time_formatted}
+        else 
+            span There are no messages.
         a(href="/log-out") Log Out
     else
         span Please log in.
@@ -19,8 +25,9 @@ body
             input(name="password" placeholder="Enter password" type="password")
             button Sign In
         a(href="/sign-up") Sign Up
-    each message in messages
-        span #{message.title}
-        span #{message.message}
-    else 
-        span There are no messages.
+        each message in messages
+            span #{message.title}
+            span #{message.message}
+            span Posted by Member at N/A
+        else 
+            span There are no messages.
