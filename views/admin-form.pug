@@ -1,0 +1,18 @@
+html(lang="en")
+head
+    meta(charset="UTF-8")
+    title 
+body 
+    span= title
+    if(user.admin_status == true)
+        span You are already an admin.
+        a(href="/") Back to Home Page
+    else
+        form(action="/get-admin-access", method="POST")
+            label(for="passcode") Enter the admin passcode below to become an admin.
+            input(name="passcode" placeholder="Enter passcode" type="number")
+            button Submit
+        a(href="/") Back to Home Page
+    if errors
+        for error in errors
+            span #{error.msg}
