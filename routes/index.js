@@ -23,7 +23,7 @@ passport.use(new LocalStrategy((username, password, done) => {
             return done(null, user)
         } else {
             // Passwords do not match
-            return done(null, false, {message: "Incorrect password"});
+            return done(null, false, { message: "Incorrect password" });
         }
     })
   }).catch(err => done(err));
@@ -75,7 +75,7 @@ router.get("/log-out", (req, res, next) => {
 
 // Handle user sign up on POST
 router.post('/sign-up', [
-  body('first_name').trim().isLength({min: 1}).escape().withMessage("First name must be specified.")
+  body('first_name').trim().isLength({min: 1}).escape().withMessage("First name must be specified.") // Checks if the value entered into the input element with the name attribute "first_name" has at least 1 character
   .isAlphanumeric().withMessage("First name has non-alphanumeric characters."),
   body('last_name').trim().isLength({min: 1}).escape().withMessage("Last name must be specified.")
   .isAlphanumeric().withMessage("Last name has non-alphanumeric characters."),
@@ -102,6 +102,7 @@ router.post('/sign-up', [
             username: req.body.username,
             password: hashedPassword,
             membership_status: false,
+            admin_status: false,
             messages: [],
           });
           user.save().then(function() { // If save() was successful, redirect to localhost:3000
@@ -124,7 +125,6 @@ router.get('/join-club', function(req, res, next) {
   res.render('join-the-club-form', { title: 'Join the Club', user: req.user });
 });
 
-// TODO: When the correct passcode (13579) gets entered, the membership_status doesn't get changed to true as it should
 router.post('/join-club', [
   body('passcode').trim().escape().custom((value, {req}) => value === process.env.SECRET_PASSCODE).withMessage("The passcode you entered is incorrect.")
 ], (req, res, next) => {
@@ -167,6 +167,35 @@ router.post('/new-message', [
       return next(err);
     });
   }
+});
+
+router.get('/get-admin-access', function(req, res, next) {
+  res.render('admin-form', { title: 'Become an Admin', user: req.user });
+});
+
+router.post('/get-admin-access', [
+  body('passcode').trim().escape().custom((value, {req}) => value === process.env.ADMIN_PASSCODE).withMessage("The passcode you entered is incorrect.")
+], (req, res, next) => {
+  const errors = validationResult(req);
+
+  if(!errors.isEmpty()) {
+    return res.render('admin-form', { title: "Become an Admin", user: req.user, errors: errors.array() })
+  } else {
+    User.findOneAndUpdate({ username: req.user.username }, { admin_status: true}, { upsert: false, useFindAndModify: false }).then(function() {
+      res.redirect("/");
+    }, function(err) {
+      return next(err);
+    });
+  }
+});
+
+router.post('/delete-message', function(req, res, next) {
+  const messageId = req.body["delete-message"];
+  Message.findByIdAndRemove(messageId).then(function() {
+    res.redirect("/");
+  }, function(err) {
+    return next(err);
+  })
 })
 
 module.exports = router;
