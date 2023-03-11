@@ -10,7 +10,7 @@ const MessageSchema = new Schema({
 });
 
 MessageSchema.virtual("time_formatted").get(function() {
-    return DateTime.fromJSDate(this.time).toLocaleString(DateTime.DATETIME_SHORT);
+    return DateTime.fromJSDate(this.time).toLocaleString(DateTime.DATETIME_SHORT); // Format time like this: 5/07/2015, 6:31 AM
 });
 
 module.exports = mongoose.model("Message", MessageSchema);
