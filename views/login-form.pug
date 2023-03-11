@@ -8,11 +8,16 @@ body
         span Welcome back #{user.username}!
         if(user.membership_status == false) 
             a(href="join-club") Click to join the club!
+        if(user.admin_status == false)
+            a(href="get-admin-access") Click to become an admin
         a(href="/new-message") Create Message
         each message in messages
             span #{message.title}
             span #{message.message}
             span Posted by #{message.user.username} at #{message.time_formatted}
+            form(id=`delete-message-${message._id}` action="/delete-message", method="POST")
+                input(name="delete-message" type="hidden" value=`${message._id}`)
+                button Delete Message
         else 
             span There are no messages.
         a(href="/log-out") Log Out
