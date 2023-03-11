@@ -189,13 +189,13 @@ router.post('/get-admin-access', [
   }
 });
 
-router.post('/delete-message', function(req, res, next) {
-  const messageId = req.body["delete-message"];
-  Message.findByIdAndRemove(messageId).then(function() {
+router.post('/delete-message', function(req, res,next) {
+  body('delete-message').trim().escape();
+  Message.findByIdAndRemove(req.body["delete-message"]).then(function() {
     res.redirect("/");
   }, function(err) {
     return next(err);
-  })
-})
+  });
+});
 
 module.exports = router;
