@@ -1,10 +1,8 @@
-html(lang="en")
-head
-    meta(charset="UTF-8")
-    title 
-body 
+extends layout 
+
+block content
     span= title
-    form(action="", method="POST")
+    form(action="/sign-up", method="POST")
         label(for="first_name") First Name 
         input(name="first_name" placeholder="Enter first name" type="text")
         label(for="last_name") Last Name
@@ -16,6 +14,8 @@ body
         label(for="confirm-password") Confirm Password
         input(name="confirm-password" placeholder="Re-enter password" type="password")
         button Sign Up
+    span Have an account? 
+        a(href="/login") Login
     if errors
         for error in errors
             span #{error.msg}

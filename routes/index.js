@@ -1,12 +1,13 @@
 var express = require('express');
 var router = express.Router();
 const User = require("../models/user");
-const Message = require("../models/message");
+const Post = require("../models/post");
 const session = require("express-session");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const bcrypt = require("bcryptjs");
 const { body, validationResult } = require("express-validator");
+const flash = require('connect-flash');
 require('dotenv').config();
 
 passport.use(new LocalStrategy((username, password, done) => {
@@ -33,7 +34,6 @@ passport.serializeUser(function(user, done) {
   done(null, user.id);
 });
 
-// TODO: Model.findById() no longer accepts a callback
 passport.deserializeUser(function(id, done) {
   User.findById(id).then(user => {
     done(null, user);
@@ -43,6 +43,7 @@ passport.deserializeUser(function(id, done) {
 router.use(session({ secret: "cats", resave: false, saveUninitialized: true }));
 router.use(passport.initialize());
 router.use(passport.session());
+router.use(flash());
 router.use(express.urlencoded({ extended: false }));
 router.use(function(req, res, next) {
   res.locals.currentUser = req.user;
@@ -51,10 +52,10 @@ router.use(function(req, res, next) {
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  Message.find({}, "user title message time")
+  Post.find({}, "user title content time")
   .populate({path: 'user', select: 'username'}) // Populate the user (path attribute is user) field of the message with its corresponding user and only include the username (select attribute is username)
-  .then(function(list_messages) {
-    res.render('login-form', { title: 'Secret Chat Room', user: req.user, messages: list_messages});
+  .then(function(list_posts) {
+    res.render('home', { title: 'Secret Message Board', user: req.user, posts: list_posts});
   })
   .catch(next); // Catch any errors that might occur during the find and populate operations and pass them on to the "next" middleware function
 })
@@ -103,7 +104,7 @@ router.post('/sign-up', [
             password: hashedPassword,
             membership_status: false,
             admin_status: false,
-            messages: [],
+            posts: [],
           });
           user.save().then(function() { // If save() was successful, redirect to localhost:3000
             res.redirect("/");
@@ -116,16 +117,23 @@ router.post('/sign-up', [
   }
 })
 
+router.get('/login', function(req, res, next) {
+  res.render('login-form', { title: "Login", message: req.flash('error') });
+});
+
 router.post('/login', passport.authenticate("local", {
   successRedirect: "/",
-  failureRedirect: "/",
-}));
+  failureRedirect: "/login",
+  failureFlash: true
+}), (req, res) => {
+  res.render('login-form', { title: "Login", message: req.flash('error') }); // Pass error message stored in req.flash('error') variable to login-form template
+});
 
-router.get('/join-club', function(req, res, next) {
+router.get('/become-member', function(req, res, next) {
   res.render('join-the-club-form', { title: 'Join the Club', user: req.user });
 });
 
-router.post('/join-club', [
+router.post('/become-member', [
   body('passcode').trim().escape().custom((value, {req}) => value === process.env.SECRET_PASSCODE).withMessage("The passcode you entered is incorrect.")
 ], (req, res, next) => {
   const errors = validationResult(req);
@@ -141,27 +149,27 @@ router.post('/join-club', [
   }
 });
 
-router.get('/new-message', function(req, res, next) {
-  res.render("create-message-form", { title: 'Create a New Message' });
+router.get('/new-post', function(req, res, next) {
+  res.render("create-post-form", { title: 'Create a New Post' });
 });
 
-router.post('/new-message', [
+router.post('/new-post', [
   body('title').trim().isLength({min: 1}).escape().withMessage("Title cannot be empty."),
-  body('message').trim().isLength({min: 1}).escape().withMessage("Message cannot be empty.")
+  body('content').trim().isLength({min: 1}).escape().withMessage("Content cannot be empty.")
 ], (req, res, next) => {
   // Extract any validation errors from a request
   const errors = validationResult(req);
   // If there are errors, re-render the sign up form again
   if(!errors.isEmpty()) {
-    return res.render('create-message-form', {title: 'Create a New Message', errors: errors.array()});
+    return res.render('create-post-form', {title: 'Create a New Post', errors: errors.array()});
   } else {
-    const message = new Message({
+    const post = new Post({
       user: req.user, // Associate current logged in user with message
       title: req.body.title,
-      message: req.body.message,
+      content: req.body.content,
       time: new Date(), 
     });
-    message.save().then(function() {
+    post.save().then(function() {
       res.redirect("/");
     }, function(err) {
       return next(err);
@@ -189,9 +197,9 @@ router.post('/get-admin-access', [
   }
 });
 
-router.post('/delete-message', function(req, res,next) {
-  body('delete-message').trim().escape();
-  Message.findByIdAndRemove(req.body["delete-message"]).then(function() {
+router.post('/delete-post', function(req, res,next) {
+  body('delete-post').trim().escape();
+  Post.findByIdAndRemove(req.body["delete-post"]).then(function() {
     res.redirect("/");
   }, function(err) {
     return next(err);

@@ -1,8 +1,6 @@
-html(lang="en")
-head
-    meta(charset="UTF-8")
-    title 
-body 
+extends layout 
+
+block content
     span= title
     if(user.membership_status == true)
         span You already joined the club.

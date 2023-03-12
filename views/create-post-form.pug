@@ -1,0 +1,13 @@
+extends layout
+
+block content
+    span= title
+    form(action="/new-post", method="POST")
+        label(for="title") Enter title
+        input(name="title" placeholder="Enter title" type="text")
+        label(for="content") Enter content
+        input(name="content" placeholder="Enter content" type="text")
+        button Submit
+    if errors
+        for error in errors
+            span #{error.msg}

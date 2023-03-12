@@ -4,4 +4,15 @@ html
     title= title
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
+    span Secret Message Board
+    if(currentUser)
+      a(href="/") Home
+      a(href="/become-member") Member
+      a(href="/get-admin-access") Admin 
+      a(href="/new-post") New Post
+      a(href="/log-out") Logout
+    else
+      a(href="/") Home
+      a(href="/login") Login
+      a(href="sign-up") Sign Up
     block content

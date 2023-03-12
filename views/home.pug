@@ -1,0 +1,15 @@
+extends layout 
+
+block content
+    each post in posts
+        span #{post.title}
+        span #{post.content}
+        if(user && (user.admin_status === true || user.username === post.user.username))
+            span Posted by #{post.user.username} at #{post.time_formatted}
+            form(id=`delete-post-${post._id}` action="/delete-post", method="POST")
+                input(name="delete-post" type="hidden" value=`${post._id}`)
+                button Delete Message 
+        else 
+            span Posted by Member at N/A
+    else 
+        span There are no posts.

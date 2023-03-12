@@ -1,39 +1,19 @@
-html(lang="en")
-head
-    meta(charset="UTF-8")
-    title 
-body 
+extends layout 
+
+block content
     span= title
-    if(user)
-        span Welcome back #{user.username}!
-        if(user.membership_status === false) 
-            a(href="join-club") Click to join the club!
-        if(user.admin_status === false)
-            a(href="get-admin-access") Click to become an admin
-        a(href="/new-message") Create Message
-        each message in messages
-            span #{message.title}
-            span #{message.message}
-            span Posted by #{message.user.username} at #{message.time_formatted}
-            if(user.admin_status === true || user.username === message.user.username)
-                form(id=`delete-message-${message._id}` action="/delete-message", method="POST")
-                    input(name="delete-message" type="hidden" value=`${message._id}`)
-                    button Delete Message
-        else 
-            span There are no messages.
-        a(href="/log-out") Log Out
+    if(currentUser)
+        span You are already logged in.
     else
-        span Please log in.
         form(action="/login", method="POST")
             label(for="username") Username
             input(name="username" placeholder="Enter username" type="text")
             label(for="password") Password
             input(name="password" placeholder="Enter password" type="password")
             button Sign In
+        span Don't have an account? 
         a(href="/sign-up") Sign Up
-        each message in messages
-            span #{message.title}
-            span #{message.message}
-            span Posted by Member at N/A
-        else 
-            span There are no messages.
+
+    if message
+        span= message
+    
