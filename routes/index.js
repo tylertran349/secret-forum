@@ -11,12 +11,12 @@ const flash = require('connect-flash');
 require('dotenv').config();
 
 passport.use(new LocalStrategy((username, password, done) => {
-  User.findOne({ username: username }).then((user, err) => {
+  User.findOne({ username: username }).then((user, err) => { // Find a user with the given username
     if (err) { 
-      return done(err);
+      return done(err); // Only if there's an error while querying database
     }
     if (!user) {
-      return done(null, false, { message: "Incorrect username" });
+      return done(null, false, { message: "Incorrect username" }); // Only if no user with the given username exists in the database
     }
     bcrypt.compare(password, user.password, (err, res) => {
         if(res) {
@@ -24,7 +24,7 @@ passport.use(new LocalStrategy((username, password, done) => {
             return done(null, user)
         } else {
             // Passwords do not match
-            return done(null, false, { message: "Incorrect password" });
+            return done(null, false, { message: "Incorrect password" }); // Only if user enters incorrect password for the user that was found in the database
         }
     })
   }).catch(err => done(err));
@@ -66,11 +66,11 @@ router.get('/sign-up', function(req, res, next) {
 });
 
 router.get("/log-out", (req, res, next) => {
-  req.logout(function(err) {
+  req.logout(function(err) { // Logout the current user
     if(err) {
       return next(err);
     }
-    res.redirect("/");
+    res.redirect("/"); // Log out successful, redirect to home page
   })
 })
 
@@ -96,17 +96,17 @@ router.post('/sign-up', [
         const error = [{msg: "Username already exists."}]; // Create an array with a single object that contains a msg property with the custom error message
         return res.render("sign-up-form", {title: 'Sign Up', errors: error }); // Pass the array to the sign-up-form view using the errors property
       } else {
-        bcrypt.hash(req.body.password, 10, (err, hashedPassword) => {
+        bcrypt.hash(req.body.password, 10, (err, hashedPassword) => { // Salt password from request body using bcrypt
           const user = new User({
             first_name: req.body.first_name,
             last_name: req.body.last_name,
             username: req.body.username,
-            password: hashedPassword,
+            password: hashedPassword, // Set password to the salted password
             membership_status: false,
             admin_status: false,
             posts: [],
           });
-          user.save().then(function() { // If save() was successful, redirect to localhost:3000
+          user.save().then(function() { // If save() was successful, redirect to home page
             res.redirect("/");
           }, function(err) { // If save() was unsuccessful, return an error
             return next(err);
@@ -118,19 +118,19 @@ router.post('/sign-up', [
 })
 
 router.get('/login', function(req, res, next) {
-  res.render('login-form', { title: "Login", message: req.flash('error') });
+  res.render('login-form', { title: "Login", message: req.flash('error') }); // Pass message property to view in case of any errors (req.flash stores error message)
 });
 
 router.post('/login', passport.authenticate("local", {
-  successRedirect: "/",
-  failureRedirect: "/login",
-  failureFlash: true
+  successRedirect: "/", // If authentication is successful, redirect to home
+  failureRedirect: "/login", // If authentication is unsuccessful, redirect back to login form and store a flash message containing the error message in the session using req.flash()
+  failureFlash: true // Enable use of flash messages to display error messages
 }), (req, res) => {
   res.render('login-form', { title: "Login", message: req.flash('error') }); // Pass error message stored in req.flash('error') variable to login-form template
 });
 
 router.get('/become-member', function(req, res, next) {
-  res.render('join-the-club-form', { title: 'Join the Club', user: req.user });
+  res.render('member-form', { title: 'Become a Member', user: req.user });
 });
 
 router.post('/become-member', [
@@ -139,8 +139,9 @@ router.post('/become-member', [
   const errors = validationResult(req);
 
   if(!errors.isEmpty()) {
-    return res.render('join-the-club-form', { title: "Join the Club", user: req.user, errors: errors.array() })
+    return res.render('member-form', { title: "Become a Member", user: req.user, errors: errors.array() })
   } else {
+    // Update the user with the given username, set upsert to false so no new user will be inserted into the database if no matching user is found, and set useFindAndModify to false so that Mongoose will use findOneAndUpdate() rather than the legacy findAndModify() function
     User.findOneAndUpdate({ username: req.user.username }, { membership_status: true}, { upsert: false, useFindAndModify: false }).then(function() {
       res.redirect("/");
     }, function(err) {
@@ -159,12 +160,12 @@ router.post('/new-post', [
 ], (req, res, next) => {
   // Extract any validation errors from a request
   const errors = validationResult(req);
-  // If there are errors, re-render the sign up form again
+  // If there are errors, re-render the new post form again
   if(!errors.isEmpty()) {
     return res.render('create-post-form', {title: 'Create a New Post', errors: errors.array()});
   } else {
     const post = new Post({
-      user: req.user, // Associate current logged in user with message
+      user: req.user, // Associate current logged in user with the new post
       title: req.body.title,
       content: req.body.content,
       time: new Date(), 
@@ -189,6 +190,7 @@ router.post('/get-admin-access', [
   if(!errors.isEmpty()) {
     return res.render('admin-form', { title: "Become an Admin", user: req.user, errors: errors.array() })
   } else {
+    // Update the user with the given username, set upsert to false so no new user will be inserted into the database if no matching user is found, and set useFindAndModify to false so that Mongoose will use findOneAndUpdate() rather than the legacy findAndModify() function
     User.findOneAndUpdate({ username: req.user.username }, { admin_status: true}, { upsert: false, useFindAndModify: false }).then(function() {
       res.redirect("/");
     }, function(err) {
@@ -199,7 +201,7 @@ router.post('/get-admin-access', [
 
 router.post('/delete-post', function(req, res,next) {
   body('delete-post').trim().escape();
-  Post.findByIdAndRemove(req.body["delete-post"]).then(function() {
+  Post.findByIdAndRemove(req.body["delete-post"]).then(function() { // req.body["delete-post"] is the ID of the post that the user wants to delete
     res.redirect("/");
   }, function(err) {
     return next(err);
