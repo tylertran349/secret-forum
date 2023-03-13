@@ -1,8 +1,225 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+* {
+  
 }
 
-a {
-  color: #00B7FF;
+html {
+  font-size: 10px;
+  font-family: 'Inter', sans-serif;
+  --accent-color: #3D5AF1;
+  --main-text-color: #747474;
+  --title-text-color: #3d3d3d;
+  --box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+  min-height: 100vh;
+  background: #FCFCFC;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: var(--box-shadow);
+}
+
+#header #title {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+  padding-left: 4rem;
+  font-size: 3rem;
+}
+
+#header #title #title-1 {
+  font-weight: 900;
+  text-decoration: none;
+  color: var(--title-text-color);
+}
+
+#header #title #title-2 {
+  font-weight: 900;
+  text-decoration: none;
+  color: var(--accent-color);
+}
+
+#header-links {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+  padding-right: 4rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 3rem;
+}
+
+#header-links a {
+  font-size: 2rem;
+  font-weight: bold;
+  text-decoration: none;
+  color: var(--accent-color);
+}
+
+#section-title {
+  font-size: 3rem;
+  font-weight: bold;
+  text-decoration: none;
+  color: var(--accent-color);
+  margin: 4rem;
+}
+
+#posts-container {
+  padding: 4rem;
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 4rem;
+}
+
+#post {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  font-size: 1.5rem;
+  padding: 2rem;
+  background: white;
+  box-shadow: var(--box-shadow);
+  border-radius: 1rem;
+  gap: 1rem;
+  color: var(--main-text-color);
+}
+
+#post #title {
+  font-size: 2.5rem;
+  color: var(--title-text-color);
+  font-weight: bold;
+}
+
+#accent {
+  color: var(--accent-color);
+  font-weight: 500;
+}
+
+#delete-post-button button {
+  background: var(--accent-color);
+  color: white;
+  border: none;
+  font-family: inherit;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+#no-posts, #already-logged-in {
+  font-size: 2rem;
+  color: var(--title-text-color);
+  font-weight: 500;
+}
+
+#form-container {
+  width: 20%;
+  padding: 4rem;
+}
+
+#form-container form {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+}
+
+#label-input-pair {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+}
+
+#label-input-pair label {
+  color: var(--main-text-color);
+  font-size: 2rem;
+  font-weight: bold;
+  width: 65%;
+  text-align: left;
+}
+
+::placeholder { /* Input placeholder styling for Chrome, Firefox, Opera, and Safari 10.1+ */
+  color: var(--title-text-color);
+  opacity: 1;
+}
+
+:-ms-input-placeholder { /* Input placeholder styling for Internet Explorer 10-11 */
+  color: var(--title-text-color);
+}
+
+::-ms-input-placeholder { /* Input placeholder styling for Microsoft Edge */
+  color: var(--title-text-color);
+}
+
+#label-input-pair input {
+  width: 60%;
+  padding: 1rem;
+  margin: 0;
+  font-family: inherit;
+  border: none;
+  outline: none;
+  background: white;
+  font-size: 1.5rem;
+  box-shadow: var(--box-shadow);
+  border-radius: 0.5rem;
+  color: black;
+}
+
+#label-input-pair input:focus {
+  border: 0.2rem solid var(--accent-color);
+  outline: none;
+}
+
+#form-container button {
+  background: var(--accent-color);
+  color: white;
+  border: none;
+  font-family: inherit;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+#content {
+  font-size: 1.5rem;
+  color: var(--main-text-color);
+}
+
+#form-container a {
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-decoration: none;
+  color: var(--accent-color);
+}
+
+#error-message {
+  color: rgb(218, 0, 0);
+  font-size: 1.5rem;
+  background: rgba(255, 0, 0, 0.4);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border: 0.2rem solid rgb(218, 0, 0);
 }
