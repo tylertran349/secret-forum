@@ -1,15 +1,26 @@
 extends layout 
 
 block content
-    each post in posts
-        span #{post.title}
-        span #{post.content}
-        if(user && (user.admin_status === true || user.username === post.user.username))
-            span Posted by #{post.user.username} at #{post.time_formatted}
-            form(id=`delete-post-${post._id}` action="/delete-post", method="POST")
-                input(name="delete-post" type="hidden" value=`${post._id}`)
-                button Delete Message 
+    span(id="section-title")= title
+    div(id="posts-container")
+        each post in posts
+            div(id="post")
+                span(id="title") #{post.title}
+                span(id="content") #{post.content}
+                if(user && (user.admin_status === true || user.username === post.user.username))
+                    span(id="author-and-date") 
+                        | Posted by 
+                        span(id="accent") #{post.user.username}
+                        |  at 
+                        span(id="accent") #{post.time_formatted}
+                    form(id="delete-post-button" action="/delete-post", method="POST")
+                        input(name="delete-post" type="hidden" value=`${post._id}`)
+                        button Delete
+                else 
+                    span(id="author-and-date") 
+                        | Posted by 
+                        span(id="accent") Member
+                        | at 
+                        span(id="accent") N/A
         else 
-            span Posted by Member at N/A
-    else 
-        span There are no posts.
+            span(id="no-posts") There are no posts.

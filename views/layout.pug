@@ -1,18 +1,25 @@
 doctype html
 html
   head
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     title= title
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
-    span Secret Message Board
-    if(currentUser)
-      a(href="/") Home
-      a(href="/become-member") Member
-      a(href="/get-admin-access") Admin 
-      a(href="/new-post") New Post
-      a(href="/log-out") Logout
-    else
-      a(href="/") Home
-      a(href="/login") Login
-      a(href="sign-up") Sign Up
+    div(id="header")
+      div(id="title")
+        a(href="/" id="title-1") the
+        a(href="/" id="title-2") forum
+      div(id="header-links")
+        if(currentUser)
+          a(href="/") Home
+          a(href="/become-member") Member
+          a(href="/get-admin-access") Admin 
+          a(href="/new-post") New Post
+          a(href="/log-out") Logout
+        else
+          a(href="/") Home
+          a(href="/login") Login
+          a(href="sign-up") Sign Up
     block content
