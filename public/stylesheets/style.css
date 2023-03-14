@@ -120,7 +120,7 @@ body {
   cursor: pointer;
 }
 
-#no-posts, #already-logged-in {
+#no-posts, #already-logged-in, #already-admin {
   font-size: 2rem;
   color: var(--title-text-color);
   font-weight: 500;
@@ -128,7 +128,7 @@ body {
 
 #form-container {
   width: 20%;
-  padding: 4rem;
+  padding-bottom: 4rem;
 }
 
 #form-container form {
@@ -153,7 +153,7 @@ body {
   font-size: 2rem;
   font-weight: bold;
   width: 65%;
-  text-align: left;
+  text-align: center;
 }
 
 ::placeholder { /* Input placeholder styling for Chrome, Firefox, Opera, and Safari 10.1+ */
@@ -216,10 +216,13 @@ body {
 }
 
 #error-message {
-  color: rgb(218, 0, 0);
+  color: rgb(255, 0, 0);
   font-size: 1.5rem;
-  background: rgba(255, 0, 0, 0.4);
+  background: rgba(200, 0, 0, 0.4);
   padding: 1rem;
   border-radius: 0.5rem;
-  border: 0.2rem solid rgb(218, 0, 0);
+  border: 0.2rem solid rgb(255, 0, 0);
+  margin-bottom: 2rem;
+  width: 20%;
+  text-align: center;
 }
