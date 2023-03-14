@@ -1,21 +1,27 @@
 extends layout 
 
 block content
-    span= title
-    form(action="/sign-up", method="POST")
-        label(for="first_name") First Name 
-        input(name="first_name" placeholder="Enter first name" type="text")
-        label(for="last_name") Last Name
-        input(name="last_name" placeholder="Enter last name" type="text")
-        label(for="username") Username
-        input(name="username" placeholder="Enter username" type="text")
-        label(for="password") Password
-        input(name="password" placeholder="At least 8 characters" type="password")
-        label(for="confirm-password") Confirm Password
-        input(name="confirm-password" placeholder="Re-enter password" type="password")
-        button Sign Up
-    span Have an account? 
-        a(href="/login") Login
+    span(id="section-title")= title
     if errors
         for error in errors
-            span #{error.msg}
+            span(id="error-message") #{error.msg}
+    div(id="form-container")
+        form(action="/sign-up", method="POST")
+            div(id="label-input-pair")
+                label(for="first_name") First Name 
+                input(name="first_name" placeholder="First name" type="text")
+            div(id="label-input-pair")
+                label(for="last_name") Last Name
+                input(name="last_name" placeholder="Last name" type="text")
+            div(id="label-input-pair")
+                label(for="username") Username
+                input(name="username" placeholder="Username" type="text")
+            div(id="label-input-pair")
+                label(for="password") Password
+                input(name="password" placeholder="At least 8 characters" type="password")
+            div(id="label-input-pair")
+                label(for="confirm-password") Confirm Password
+                input(name="confirm-password" placeholder="Re-enter password" type="password")
+            button Sign Up
+            span(id="content") Have an account? 
+                a(href="/login") Login

@@ -1,13 +1,16 @@
 extends layout
 
 block content
-    span= title
-    form(action="/new-post", method="POST")
-        label(for="title") Enter title
-        input(name="title" placeholder="Enter title" type="text")
-        label(for="content") Enter content
-        input(name="content" placeholder="Enter content" type="text")
-        button Submit
+    span(id="section-title")= title
     if errors
         for error in errors
-            span #{error.msg}
+            span(id="error-message") #{error.msg}
+    div(id="form-container")
+        form(action="/new-post", method="POST")
+            div(id="label-input-pair")
+                label(for="title") Enter title
+                input(name="title" placeholder="Enter title" type="text")
+            div(id="label-input-pair")
+                label(for="content") Enter content
+                input(name="content" placeholder="Enter content" type="text")
+            button Submit

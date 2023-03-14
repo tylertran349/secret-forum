@@ -1,16 +1,16 @@
 extends layout 
 
 block content
-    span= title
-    if(user.admin_status == true)
-        span You are already an admin.
-        a(href="/") Back to Home Page
-    else
-        form(action="/get-admin-access", method="POST")
-            label(for="passcode") Enter the admin passcode below to become an admin.
-            input(name="passcode" placeholder="Enter passcode" type="number")
-            button Submit
-        a(href="/") Back to Home Page
+    span(id="section-title")= title
     if errors
         for error in errors
-            span #{error.msg}
+            span(id="error-message") #{error.msg}
+    div(id="form-container")
+        if(user.admin_status == true)
+            span(id="already-admin") You are already an admin.
+        else
+            form(action="/get-admin-access", method="POST")
+                div(id="label-input-pair")
+                    label(for="passcode") Enter the admin passcode below to become an admin.
+                    input(name="passcode" placeholder="Enter passcode" type="number")
+                button Submit
