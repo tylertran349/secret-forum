@@ -55,7 +55,7 @@ router.get('/', function(req, res, next) {
   Post.find({}, "user title content time")
   .populate({path: 'user', select: 'username'}) // Populate the user (path attribute is user) field of the message with its corresponding user and only include the username (select attribute is username)
   .then(function(list_posts) {
-    res.render('home', { title: 'Posts', user: req.user, posts: list_posts});
+    res.render('home', { title: '💬 Secret Forum', user: req.user, posts: list_posts});
   })
   .catch(next); // Catch any errors that might occur during the find and populate operations and pass them on to the "next" middleware function
 })
