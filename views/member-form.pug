@@ -1,16 +1,15 @@
 extends layout 
 
 block content
-    span= title
-    if(user.membership_status == true)
-        span You already joined the club.
-        a(href="/") Back to Home Page
-    else
-        form(action="/join-club", method="POST")
-            label(for="passcode") Enter the secret passcode below.
-            input(name="passcode" placeholder="Enter passcode" type="number")
-            button Join
-        a(href="/") Back to Home Page
+    span(id="section-title")= title
     if errors
         for error in errors
-            span #{error.msg}
+            span(id="error-message") #{error.msg}
+    div(id="form-container")
+        if(user.membership_status == true)
+            span You already joined the club.
+        else
+            form(action="/become-member", method="POST")
+                label(for="passcode") Enter the secret passcode below.
+                input(name="passcode" placeholder="Enter passcode" type="number")
+                button Join
