@@ -10,7 +10,7 @@ const PostSchema = new Schema({
 });
 
 PostSchema.virtual("time_formatted").get(function() {
-    return DateTime.fromJSDate(this.time).toLocaleString(DateTime.DATETIME_SHORT); // Format time like this: 5/07/2015, 6:31 AM
+    return DateTime.fromJSDate(this.time).setZone(Intl.DateTimeFormat().resolvedOptions().timeZone).toLocaleString(DateTime.DATETIME_SHORT); // Format time like this: 5/07/2015, 6:31 AM and set time zone to local computer's time zone
 });
 
 module.exports = mongoose.model("Post", PostSchema);
