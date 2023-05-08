@@ -189,7 +189,7 @@ body {
 }
 
 #label-input-pair textarea {
-  min-height: 30rem;
+  min-height: 20rem;
 }
 
 #label-input-pair input:focus {
