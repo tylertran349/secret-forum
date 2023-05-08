@@ -3,7 +3,7 @@ extends layout
 block content
     span(id="section-title") Posts
     div(id="posts-container")
-        each post in posts
+        each post in posts.reverse()
             div(id="post")
                 span(id="title") #{post.title}
                 span(id="content") #{post.content}
