@@ -131,12 +131,17 @@ body {
   padding-bottom: 4rem;
 }
 
-#form-container form {
+#form-container form, #new-post-form-container form {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
   gap: 2rem;
+}
+
+#new-post-form-container {
+  width: 50%;
+  padding-bottom: 4rem;
 }
 
 #label-input-pair {
@@ -169,7 +174,7 @@ body {
   color: var(--title-text-color);
 }
 
-#label-input-pair input {
+#label-input-pair input, #label-input-pair textarea {
   width: 60%;
   padding: 1rem;
   margin: 0;
@@ -183,12 +188,16 @@ body {
   color: black;
 }
 
+#label-input-pair textarea {
+  min-height: 20rem;
+}
+
 #label-input-pair input:focus {
   border: 0.2rem solid var(--accent-color);
   outline: none;
 }
 
-#form-container button {
+#form-container button, #new-post-form-container button {
   background: var(--accent-color);
   color: white;
   border: none;
