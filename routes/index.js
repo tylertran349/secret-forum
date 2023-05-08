@@ -168,7 +168,7 @@ router.post('/new-post', [
       user: req.user, // Associate current logged in user with the new post
       title: req.body.title,
       content: req.body.content,
-      time: new Date(), 
+      time: new Date(req.body.time), 
     });
     post.save().then(function() {
       res.redirect("/");
