@@ -12,7 +12,7 @@ block content
                         | Posted by 
                         span(id="accent") #{post.user.username}
                         |  at 
-                        span(id="accent") #{post.time_formatted}
+                        span(id="accent" data-time=post.time) N/A
                     form(id="delete-post-button" action="/delete-post", method="POST")
                         input(name="delete-post" type="hidden" value=`${post._id}`)
                         button Delete
@@ -24,3 +24,15 @@ block content
                         span(id="accent") N/A
         else 
             span(id="no-posts") There are no posts.
+
+    script.
+        // Get the element with a "data-time" attribute
+        const timeElement = document.querySelector('[data-time]');
+
+        // Define the date formatting options
+        const options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
+
+        // Format and display the date
+        const time = new Date(timeElement.getAttribute('data-time'));
+        const formattedTime = new Intl.DateTimeFormat('default', options).format(time);
+        timeElement.textContent = formattedTime;
