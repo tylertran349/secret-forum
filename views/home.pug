@@ -11,7 +11,7 @@ block content
                     span(id="author-and-date") 
                         | Posted by 
                         span(id="accent") #{post.user.username}
-                        |  at 
+                        |  on 
                         span(id="accent" data-time=post.time) N/A
                     form(id="delete-post-button" action="/delete-post", method="POST")
                         input(name="delete-post" type="hidden" value=`${post._id}`)
@@ -26,13 +26,17 @@ block content
             span(id="no-posts") There are no posts.
 
     script.
-        // Get the element with a "data-time" attribute
-        const timeElement = document.querySelector('[data-time]');
+        // Get all elements with a "data-time" attribute
+        const timeElements = document.querySelectorAll('[data-time]');
 
-        // Define the date formatting options
-        const options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
+        // Define the date and time formatting options
+        const dateOptions = { month: 'numeric', day: 'numeric', year: 'numeric' };
+        const timeOptions = { hour: 'numeric', minute: 'numeric' };
 
-        // Format and display the date
-        const time = new Date(timeElement.getAttribute('data-time'));
-        const formattedTime = new Intl.DateTimeFormat('default', options).format(time);
-        timeElement.textContent = formattedTime;
+        // Format and display the date for each element
+        timeElements.forEach(el => {
+            const time = new Date(el.getAttribute('data-time'));
+            const formattedDate = new Intl.DateTimeFormat('en-US', dateOptions).format(time);
+            const formattedTime = new Intl.DateTimeFormat('en-US', timeOptions).format(time);
+            el.textContent = `${formattedDate} at ${formattedTime}`;
+        });
