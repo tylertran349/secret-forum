@@ -25,6 +25,7 @@ block content
         else 
             span(id="no-posts") There are no posts.
 
+    // Format all dates on client-side with time zone of browser/local computer (not time zone of hosting platform's server)
     script.
         // Get all elements with a "data-time" attribute
         const timeElements = document.querySelectorAll('[data-time]');
