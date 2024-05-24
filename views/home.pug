@@ -7,19 +7,18 @@ block content
             div(id="post")
                 span(id="title") #{post.title}
                 span(id="content") #{post.content}
-                if(user && (user.admin_status === true || user.username === post.user.username))
-                    span(id="author-and-date") 
-                        | Posted by 
-                        span(id="accent") #{post.user.username}
+                if(user && (user.membership_status === true || user.admin_status === true || user.username === post.user.username))
+                    span(id="author-and-date") Posted by
+                        span(id="accent")  #{post.user.username}
                         |  on 
                         span(id="accent" data-time=post.time) N/A
-                    form(id="delete-post-button" action="/delete-post", method="POST")
-                        input(name="delete-post" type="hidden" value=`${post._id}`)
-                        button Delete
+                    if(user.admin_status === true || user.username === post.user.username)
+                        form(id="delete-post-button" action="/delete-post", method="POST")
+                            input(name="delete-post" type="hidden" value=`${post._id}`)
+                            button Delete
                 else 
-                    span(id="author-and-date") 
-                        | Posted by 
-                        span(id="accent") Member&nbsp;
+                    span(id="author-and-date") Posted by
+                        span(id="accent")  Member&nbsp;
                         | at 
                         span(id="accent") N/A
         else 
